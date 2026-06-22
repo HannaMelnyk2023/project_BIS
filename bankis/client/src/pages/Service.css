@@ -1,0 +1,155 @@
+.service {
+  padding: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.service__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--dark-gray);
+  margin-bottom: 30px;
+}
+
+.service__about {
+  background-color: var(--light-gray);
+  padding: 25px;
+  border-radius: 5px;
+  margin-bottom: 40px;
+  line-height: 1.8;
+}
+
+.service__about p {
+  margin-bottom: 10px;
+}
+
+.service__types h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--red);
+  margin-bottom: 20px;
+}
+
+.service__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.service__card {
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 25px;
+  transition: all 0.3s;
+}
+
+.service__card:hover {
+  border-color: var(--red);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.service__card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--red);
+  margin-bottom: 10px;
+}
+
+.service__card p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--dark-gray);
+}
+
+.service__highlight {
+  background-color: var(--red);
+  color: var(--white);
+  padding: 20px 25px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: 500;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.service__form h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--dark-gray);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 500px;
+}
+
+.form__input,
+.form__textarea {
+  padding: 12px 15px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  font-size: 15px;
+  font-family: "Roboto", sans-serif;
+  transition: border-color 0.3s;
+}
+
+.form__input:focus,
+.form__textarea:focus {
+  outline: none;
+  border-color: var(--red);
+}
+
+.form__textarea {
+  height: 120px;
+  resize: vertical;
+}
+
+.form__btn {
+  background-color: var(--red);
+  color: var(--white);
+  border: none;
+  padding: 13px 30px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: background-color 0.3s;
+  align-self: flex-start;
+}
+
+.form__btn:hover {
+  background-color: #aa0000;
+}
+
+@media (max-width: 1024px) {
+  .service {
+    padding: 24px;
+  }
+
+  .service__cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .service {
+    padding: 16px;
+  }
+
+  .service__title {
+    font-size: 22px;
+  }
+
+  .service__cards {
+    grid-template-columns: 1fr;
+  }
+
+  .form__btn {
+    width: 100%;
+    align-self: stretch;
+  }
+}
