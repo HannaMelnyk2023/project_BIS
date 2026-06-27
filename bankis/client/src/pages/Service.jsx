@@ -1,6 +1,33 @@
+import { useState } from 'react'
+import axios from 'axios'
 import './Service.css'
 
+const API_URL = import.meta.env.VITE_API_URL || '/api'
+
 function Service() {
+  const [form, setForm] = useState({ name: '', phone: '', comment: '' })
+  const [status, setStatus] = useState(null)
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    try {
+      await axios.post(`${API_URL}/contact`, {
+        name: form.name,
+        phone: form.phone,
+        comment: form.comment,
+        product: 'Сервісний центр'
+      })
+      setStatus('success')
+      setForm({ name: '', phone: '', comment: '' })
+    } catch {
+      setStatus('error')
+    }
+  }
+
   return (
     <main className="service">
       <h1 className="service__title">Сервісний центр</h1>
@@ -39,10 +66,12 @@ function Service() {
 
       <section className="service__form">
         <h2>Замовити консультацію</h2>
-        <form className="form">
-          <input className="form__input" type="text" placeholder="Ваше ім'я" />
-          <input className="form__input" type="tel" placeholder="Телефон" />
-          <textarea className="form__textarea" placeholder="Опишіть проблему або запитання"></textarea>
+        {status === 'success' && <p className="form__success">Дякуємо! Ми зв'яжемося з вами.</p>}
+        {status === 'error' && <p className="form__error">Помилка відправки. Спробуйте ще раз.</p>}
+        <form className="form" onSubmit={handleSubmit}>
+          <input className="form__input" type="text" name="name" placeholder="Ваше ім'я" value={form.name} onChange={handleChange} required />
+          <input className="form__input" type="tel" name="phone" placeholder="Телефон" value={form.phone} onChange={handleChange} required />
+          <textarea className="form__textarea" name="comment" placeholder="Опишіть проблему або запитання" value={form.comment} onChange={handleChange}></textarea>
           <button className="form__btn" type="submit">Відправити</button>
         </form>
       </section>
@@ -50,4 +79,4 @@ function Service() {
   )
 }
 
-export default Service;
+export default Service

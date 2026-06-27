@@ -4,7 +4,9 @@ const axios = require('axios')
 require('dotenv').config()
 
 const app = express()
-app.use(cors())
+app.use(cors({
+    origin: ['https://bankis.kiev.ua', 'https://www.bankis.kiev.ua']
+}))
 app.use(express.json())
 
 const nodemailer = require('nodemailer') //
