@@ -5,7 +5,11 @@ require('dotenv').config()
 
 const app = express()
 app.use(cors({
-    origin: ['https://bankis.kiev.ua', 'https://www.bankis.kiev.ua']
+    origin: [
+        'https://bankis.kiev.ua',
+        'https://www.bankis.kiev.ua',
+        'http://localhost:5173'
+    ]
 }))
 app.use(express.json())
 
@@ -171,8 +175,10 @@ const transporter = nodemailer.createTransport({
 
 app.post('/api/contact', async (req, res) => {
     const { name, phone, comment, product } = req.body
+    console.log('Отримано запит:', { name, phone, comment, product })
 
     try {
+        console.log('Відправляємо email...')
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: process.env.EMAIL_TO,
@@ -185,6 +191,7 @@ app.post('/api/contact', async (req, res) => {
         <p><strong>Коментар:</strong> ${comment || 'немає'}</p>
       `
         })
+        console.log('Email відправлено!')
         res.json({ success: true })
     } catch (error) {
         console.error('Помилка відправки:', error.message)

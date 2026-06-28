@@ -2,7 +2,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import './Service.css'
 
-const API_URL = import.meta.env.VITE_API_URL || '/api'
+const API_URL = 'http://localhost:5000/api';
 
 function Service() {
   const [form, setForm] = useState({ name: '', phone: '', comment: '' })
