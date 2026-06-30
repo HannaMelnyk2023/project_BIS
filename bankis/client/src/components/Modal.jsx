@@ -13,7 +13,7 @@ function Modal({ product, onClose }) {
     e.preventDefault();
     setSending(true);
     try {
-      await axios.post("http://localhost:5000/api/contact", {
+      await axios.post("https://bankis.kiev.ua/api/contact", {
         name,
         phone,
         comment,
