@@ -3,7 +3,10 @@ import axios from 'axios'
 import './Service.css'
 
 // const API_URL = 'http://localhost:5000/api';
-const API_URL = 'https://bankis.kiev.ua/api'
+// const API_URL = 'https://bankis.kiev.ua/api'
+const API_URL = import.meta.env.DEV
+  ? 'http://localhost:5000/api'
+  : 'https://bankis.kiev.ua/api';
 
 function Service() {
   const [form, setForm] = useState({ name: '', phone: '', comment: '' })

@@ -2,6 +2,10 @@ import { useState } from "react";
 import axios from "axios";
 import "./Modal.css";
 
+const API_URL = import.meta.env.DEV
+  ? 'http://localhost:5000/api'
+  : 'https://bankis.kiev.ua/api';
+
 function Modal({ product, onClose }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -13,7 +17,7 @@ function Modal({ product, onClose }) {
     e.preventDefault();
     setSending(true);
     try {
-      await axios.post("https://bankis.kiev.ua/api/contact", {
+      await axios.post(`${API_URL}/contact`, {
         name,
         phone,
         comment,
