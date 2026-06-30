@@ -125,6 +125,17 @@
   background-color: #aa0000;
 }
 
+.form__success {
+  color: #1a7f37;
+  margin-bottom: 12px;
+}
+
+.form__error {
+  color: var(--red);
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
 @media (max-width: 1024px) {
   .service {
     padding: 24px;

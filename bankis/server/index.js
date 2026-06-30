@@ -165,21 +165,52 @@ app.get('/api/specs', async (req, res) => {
 })
 
 
+const getEmailPass = () => String(process.env.EMAIL_PASS || '').replace(/\s+/g, '')
+
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    ...(process.env.EMAIL_HOST
+        ? {
+            host: process.env.EMAIL_HOST,
+            port: Number(process.env.EMAIL_PORT || 587),
+            secure: process.env.EMAIL_SECURE === 'true',
+        }
+        : { service: 'gmail' }),
     auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    }
+        pass: getEmailPass(),
+    },
+    connectionTimeout: 10_000,
+    greetingTimeout: 10_000,
+    socketTimeout: 10_000,
 })
+
+const sendMailWithTimeout = (mailOptions, timeoutMs = 15_000) =>
+    Promise.race([
+        transporter.sendMail(mailOptions),
+        new Promise((_, reject) => {
+            setTimeout(
+                () => reject(new Error('Таймаут SMTP. Хостинг може блокувати відправку через Gmail.')),
+                timeoutMs,
+            )
+        }),
+    ])
 
 app.post('/api/contact', async (req, res) => {
     const { name, phone, comment, product } = req.body
-    console.log('Отримано запит:', { name, phone, comment, product })
+
+    if (!name || !phone) {
+        return res.status(400).json({ error: 'Ім\'я та телефон обов\'язкові' })
+    }
+
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS || !process.env.EMAIL_TO) {
+        console.error('EMAIL_USER, EMAIL_PASS або EMAIL_TO не налаштовані')
+        return res.status(500).json({ error: 'Email не налаштований на сервері' })
+    }
+
+    console.log('Отримано запит:', { name, phone, product })
 
     try {
-        console.log('Відправляємо email...')
-        await transporter.sendMail({
+        await sendMailWithTimeout({
             from: process.env.EMAIL_USER,
             to: process.env.EMAIL_TO,
             subject: `Замовлення консультації — ${product}`,
@@ -189,13 +220,14 @@ app.post('/api/contact', async (req, res) => {
         <p><strong>Ім'я:</strong> ${name}</p>
         <p><strong>Телефон:</strong> ${phone}</p>
         <p><strong>Коментар:</strong> ${comment || 'немає'}</p>
-      `
+      `,
         })
         console.log('Email відправлено!')
         res.json({ success: true })
     } catch (error) {
         console.error('Помилка відправки:', error.message)
-        res.status(500).json({ error: error.message })
+        const message = error.message || 'Помилка відправки email'
+        res.status(500).json({ error: message })
     }
 })
 

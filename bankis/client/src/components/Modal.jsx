@@ -1,10 +1,6 @@
 import { useState } from "react";
-import axios from "axios";
+import { sendContact } from "../services/api";
 import "./Modal.css";
-
-const API_URL = import.meta.env.DEV
-  ? 'http://localhost:5000/api'
-  : 'https://bankis.kiev.ua/api';
 
 function Modal({ product, onClose }) {
   const [name, setName] = useState("");
@@ -17,7 +13,7 @@ function Modal({ product, onClose }) {
     e.preventDefault();
     setSending(true);
     try {
-      await axios.post(`${API_URL}/contact`, {
+      await sendContact({
         name,
         phone,
         comment,
@@ -26,7 +22,10 @@ function Modal({ product, onClose }) {
       setSent(true);
     } catch (error) {
       console.error("Помилка:", error);
-      alert("Помилка відправки. Спробуйте ще раз.");
+      const message =
+        error.response?.data?.error ||
+        "Помилка відправки. Спробуйте ще раз.";
+      alert(message);
     } finally {
       setSending(false);
     }
@@ -40,11 +39,6 @@ function Modal({ product, onClose }) {
         </button>
         <h2 className="modal__title">Замовити консультацію</h2>
         <p className="modal__product">
-          {/* {product?.image_url && (
-            <div className="modal__image">
-              <img src={product.image_url} alt={product.name} />
-            </div>
-          )} */}
           Товар: <strong>{product?.name}</strong>
         </p>
 
